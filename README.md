@@ -64,7 +64,7 @@ az deployment group validate \
 }
 ```
 
-## Additinoal Validation options
+## Additional Validation options
 ```
 az deployment sub validate \
   --location <location> \
