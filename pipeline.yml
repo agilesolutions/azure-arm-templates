@@ -1,0 +1,31 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  resourceGroupName: 'myResourceGroup'
+  location: 'eastus'
+  templateFile: 'azuredeploy.json'
+  parametersFile: 'azuredeploy.parameters.json'
+
+stages:
+- stage: Deploy
+  displayName: 'Deploy Infrastructure'
+  jobs:
+  - job: ARM_Deployment
+    displayName: 'Deploy ARM Template'
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Login to Azure'
+      inputs:
+        azureSubscription: 'YourAzureServiceConnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az group create --name ${{ variables.resourceGroupName }} --location ${{ variables.location }}
+          az deployment group create \\
+            --resource-group ${{ variables.resourceGroupName }} \\
+            --template-file ${{ variables.templateFile }} \\
+            --parameters ${{ variables.parametersFile }}
